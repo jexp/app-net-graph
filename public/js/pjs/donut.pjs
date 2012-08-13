@@ -44,7 +44,7 @@ public class DonutSlice {
      float angle = theta;
      
 //     curContext.font = "13.1px Courier";
-	 curContext.font = round(600/seg.slices.size())+"px GraublauWeb";
+	 curContext.font = Math.min(25,round(600/seg.slices.size()))+"px GraublauWeb";
 
      curContext.textAlign = "left";
      if (theta > PI/2 && theta < (PI+PI/2)-0.05) {

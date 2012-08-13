@@ -63,7 +63,7 @@ void setup() {
   resize();
   fill(0);
   smooth();
-  frameRate(30);
+  frameRate(7); // was 30
 	background(BACKGROUND);
 
 	if (resourceId) {
