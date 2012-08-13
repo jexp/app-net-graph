@@ -7,18 +7,18 @@
     %script{:src => "/js/ui.js"}
     %script{:src => "/js/processing.min.js"} 
 
-    %title Neovigator
+    %title app.net Neovigator
 
   %body
     %canvas#neoviz
     %header
       %section#title
-        %h1 Neovigator
-        %p Neography Browser
+        %h1 App.Net Neovigator
+        %p Follow Graph Browser
       %section#search
         %form{:action => "/", :method => "get"}
-          %label Node ID:
-          %input#neoid{:type => "text", :value => "#{@neoid}", :name => "neoid"}
+          %label Username:
+          %input#neoid{:type => "text", :value => "#{@user}", :name => "user"}
           %input#loadnode{:type => "submit", :value => "Load", :class => "button"}
       %br{:style => "clear: both;"}
     %section#content
@@ -28,23 +28,26 @@
         / Neovigator introduction
         %h2 About
         %p
+          This Neo4j database contains the follows-relationships from 
+          %a{:href => "https://alpha.app.net", :target=>"_blank"} app.net
+        %p
           Neovigator is an attempt to visually navigate through 
           %a{:href => "http://neo4j.org"} Neo4j 
           by using the 
           %a{:href => "https://github.com/maxdemarzi/neography"} Neography
           Gem.
-
+        %p
           It takes advantage of the latest HTML5 features
           by using the canvas element for drawing.
         %h3 Get started
         %p
-          Start using the browser by just typing in the id of an existing node.
-          You can see the available nodes at
-          %a{:href => "http://localhost:7474", :target => "_blank" } http://localhost:7474  
+          Start using the browser by just typing in the name of an app.net user.
+          You can see the members at the 
+          %a{:href => "https://alpha.app.net/global/", :target => "_blank" } global stream of app.net
           , try loading
-          %a{:href => "/?neoid=1"} 
-            %b Node 1
-          to get started.    
+          %a{:href => "/?user=stephenfry"} 
+            %b Stephen Fry's
+          node to get started.    
         %h3 Quirks
         %p
           There may be some unexpected behavior. Performance may drop significantly as
@@ -64,7 +67,7 @@
         %h3 Code          
         %p
           Available at
-          %a{:href => "https://github.com/maxdemarzi/neovigator", :target => "_blank"} Github    
+          %a{:href => "https://github.com/jexp/app-net", :target => "_blank"} Github    
 
       <div id="browser_not_supported">
       Your Browser is currently not supported.<br/><br/>Try one of these:<br/>

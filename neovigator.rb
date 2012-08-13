@@ -24,31 +24,6 @@ class Neovigator < Sinatra::Application
     end
   end
 
-  def create_graph
-    graph_exists = neo.get_node_properties(1)
-    return if graph_exists && graph_exists['name']
-
-    johnathan = create_person('Johnathan')
-    mark      = create_person('Mark')
-    phil      = create_person('Phil')
-    mary      = create_person('Mary')
-    luke      = create_person('Luke')
-    make_mutual(johnathan, mark, "friends")
-    make_mutual(mark, mary, "friends")
-    make_mutual(mark, phil, "friends")
-    make_mutual(phil, mary, "married")
-    make_mutual(phil, luke, "enemies")
-  end
-
-  def make_mutual(node1, node2, rel_type)
-    neo.create_relationship(rel_type, node1, node2)
-    neo.create_relationship(rel_type, node2, node1)
-  end
-
-  def create_person(name)
-    neo.create_node("name" => name)
-  end
-
   def neighbours
     {"order"         => "depth first",
      "uniqueness"    => "none",
@@ -67,6 +42,14 @@ class Neovigator < Sinatra::Application
     end
   end
 
+START="stephenfry"
+
+  def node_for(id)
+    id = START if !id
+    return neo.get_node(id) if id =~ /\d+/
+    return (neo.get_node_auto_index("name",id)||[]).first || neo.get_node_auto_index("name",START).first
+  end
+  
   def get_properties(node)
     properties = "<ul>"
     node["data"].each_pair do |key, value|
@@ -77,8 +60,8 @@ class Neovigator < Sinatra::Application
 
   get '/resources/show' do
     content_type :json
-
-    node = neo.get_node(params[:id]) 
+    node = node_for(params[:id])
+    user = node["data"]["name"]
     connections = neo.traverse(node, "fullpath", neighbours)
     incoming = Hash.new{|h, k| h[k] = []}
     outgoing = Hash.new{|h, k| h[k] = []}
@@ -89,8 +72,11 @@ class Neovigator < Sinatra::Application
        c["nodes"].each do |n|
          nodes[n["self"]] = n["data"]
        end
+     end
+     
+    connections.each do |c|
        rel = c["relationships"][0]
-
+       
        if rel["end"] == node["self"]
          incoming["Incoming:#{rel["type"]}"] << {:values => nodes[rel["start"]].merge({:id => node_id(rel["start"]) }) }
        else
@@ -102,11 +88,11 @@ class Neovigator < Sinatra::Application
         attributes << {:id => key.split(':').last, :name => key, :values => value.collect{|v| v[:values]} }
       end
 
-   attributes = [{"name" => "No Relationships","name" => "No Relationships","values" => [{"id" => "#{params[:id]}","name" => "No Relationships "}]}] if attributes.empty?
+   attributes = [{"name" => "No Relationships","name" => "No Relationships","values" => [{"id" => "#{user}","name" => "No Relationships "}]}] if attributes.empty?
 
-    @node = {:details_html => "<h2>Neo ID: #{node_id(node)}</h2>\n<p class='summary'>\n#{get_properties(node)}</p>\n",
+    @node = {:details_html => "<h2>User: #{user}</h2>\n<p class='summary'>\n#{get_properties(node)}</p>\n",
               :data => {:attributes => attributes, 
-                        :name => node["data"]["name"],
+                        :name => user,
                         :id => node_id(node)}
             }
 
@@ -115,8 +101,7 @@ class Neovigator < Sinatra::Application
   end
 
   get '/' do
-    create_graph
-    @neoid = params["neoid"]
+    @user = node_for(params["user"])["data"]["name"]
     haml :index
   end
 
