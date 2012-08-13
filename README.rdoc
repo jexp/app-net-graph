@@ -1,5 +1,7 @@
 === App.net follow graph browser.
 
+See an example running on heroku at {http://app-net-graph.heroku.com}[http://app-net-graph.heroku.com]
+
 An attempt to use {Neography}[https://github.com/maxdemarzi/neography] and {processing.js}[http://processingjs.org/] to navigate the Neo4j graph of the {app.net}[https://alpha.app.net/global/] social network
 
 === How To
@@ -20,7 +22,6 @@ Then visit http://localhost:9292 to see it running.
 
 Enter a app.net username in the text box and click "Load"
 
-See an example running on heroku at {http://app-net-graph.herokuapp.com}[http://app-net-graph.herokuapp.com]
 
 === Credits
 

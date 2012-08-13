@@ -101,7 +101,7 @@ START="stephenfry"
   end
 
   get '/' do
-    @user = node_for(params["user"])["data"]["name"]
+    @user = node_for(params["user"]||START)["data"]["name"]
     haml :index
   end
 
